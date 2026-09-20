@@ -1,0 +1,1403 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rumah Makan Koto Indah - Cita Rasa Autentik Masakan Padang</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        padang: {
+                            red: '#991B1B',
+                            darkred: '#7F1D1D',
+                            gold: '#D97706',
+                            yellow: '#F59E0B',
+                            dark: '#1C1917',
+                            cream: '#FFFBEB'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,800;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .font-serif-custom { font-family: 'Playfair Display', serif; }
+        .bg-pattern {
+            background-color: #1c1917;
+            background-image: radial-gradient(#d97706 0.75px, transparent 0.75px), radial-gradient(#d97706 0.75px, #1c1917 0.75px);
+            background-size: 30px 30px;
+            background-position: 0 0, 15px 15px;
+        }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #1c1917; }
+        ::-webkit-scrollbar-thumb { background: #991b1b; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #d97706; }
+        
+        @keyframes pulse-ring {
+            0% { transform: scale(0.95); opacity: 0.8; }
+            50% { transform: scale(1.1); opacity: 0.4; }
+            100% { transform: scale(0.95); opacity: 0.8; }
+        }
+        .pulse-live { animation: pulse-ring 2s infinite ease-in-out; }
+    </style>
+</head>
+<body class="bg-stone-50 text-stone-800 antialiased flex flex-col min-h-screen pb-20 md:pb-0">
+
+    <div class="bg-gradient-to-r from-padang-darkred via-padang-red to-padang-gold text-amber-100 text-xs md:text-sm py-2 px-4 text-center font-medium shadow-md flex items-center justify-between">
+        <div class="hidden sm:block text-[11px] opacity-80">📍 Koto Indah Padang Resto</div>
+        <div class="mx-auto flex items-center gap-2">
+            <i class="fa-solid fa-pepper-hot text-amber-300 animate-bounce"></i>
+            <span>Buka Setiap Hari: 09:00 - 21:30 WIB | Melayani Nasi Kotak & Prasmanan</span>
+            <i class="fa-solid fa-fire text-amber-300"></i>
+        </div>
+        <!-- Realtime Status Indicator Badge -->
+        <div id="realtime-status-badge" class="hidden sm:flex items-center gap-1.5 bg-stone-900/60 px-2.5 py-0.5 rounded-full text-[11px] font-mono border border-amber-400/30">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 pulse-live"></span>
+            <span class="text-emerald-300 font-semibold">Realtime Active</span>
+        </div>
+    </div>
+
+    <nav class="sticky top-0 z-40 bg-stone-900/95 backdrop-blur-md text-white border-b border-amber-600/30 shadow-xl">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <!-- Brand Logo (Klik 3x cepat untuk login pemilik) -->
+                <div class="flex items-center gap-3 cursor-pointer select-none" onclick="handleLogoClick()" title="Klik 3x untuk Akses Pemilik Resto">
+                    <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-500 to-padang-red flex items-center justify-center shadow-lg border border-amber-300/40 transform hover:scale-105 transition">
+                        <i class="fa-solid fa-utensils text-2xl text-white"></i>
+                    </div>
+                    <div>
+                        <span class="font-serif-custom text-xl md:text-2xl font-extrabold tracking-wide bg-gradient-to-r from-amber-200 via-yellow-400 to-amber-500 bg-clip-text text-transparent block">
+                            KOTO INDAH
+                        </span>
+                        <p class="text-[10px] md:text-xs text-amber-400/90 tracking-widest uppercase font-semibold">
+                            Rumah Makan Masakan Padang
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Desktop Nav Links -->
+                <div class="hidden md:flex items-center space-x-8 text-sm font-semibold">
+                    <a href="#hero" class="hover:text-amber-400 transition flex items-center gap-2">
+                        <i class="fa-solid fa-house text-amber-500"></i> Beranda
+                    </a>
+                    <a href="#nasi-kotak-section" class="hover:text-amber-400 transition flex items-center gap-2">
+                        <i class="fa-solid fa-box-open text-amber-500"></i> Nasi Kotak
+                    </a>
+                    <a href="#menu-section" class="hover:text-amber-400 transition flex items-center gap-2">
+                        <i class="fa-solid fa-drumstick-bite text-amber-500"></i> Menu Favorit
+                    </a>
+                    <a href="#about" class="hover:text-amber-400 transition flex items-center gap-2">
+                        <i class="fa-solid fa-crown text-amber-500"></i> Keunggulan
+                    </a>
+                    <a href="#location" class="hover:text-amber-400 transition flex items-center gap-2">
+                        <i class="fa-solid fa-location-dot text-amber-500"></i> Lokasi
+                    </a>
+                </div>
+
+                <!-- Actions Right -->
+                <div class="flex items-center gap-3">
+                    <!-- Cart Trigger Button -->
+                    <button onclick="toggleCartDrawer()" class="relative bg-gradient-to-r from-amber-500 to-padang-red text-white p-3 rounded-xl hover:shadow-lg hover:shadow-amber-600/30 transition transform active:scale-95 flex items-center justify-center">
+                        <i class="fa-solid fa-basket-shopping text-lg"></i>
+                        <span id="cart-badge" class="absolute -top-2 -right-2 bg-red-600 text-white text-xs font-bold w-6 h-6 rounded-full flex items-center justify-center border-2 border-stone-900 shadow">
+                            0
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <section id="hero" class="relative bg-stone-900 text-white overflow-hidden py-16 lg:py-24 border-b border-amber-600/20">
+        <div class="absolute inset-0 opacity-20 bg-pattern pointer-events-none"></div>
+        <div class="absolute -top-24 -left-24 w-96 h-96 bg-padang-red/30 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute -bottom-24 -right-24 w-96 h-96 bg-amber-500/20 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                
+                <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
+                    <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-bold uppercase tracking-wider">
+                        <i class="fa-solid fa-star text-amber-400"></i> Rancak Bana • Update Realtime & 100% Halal
+                    </div>
+                    
+                    <h1 class="text-3xl sm:text-4xl lg:text-5xl font-serif-custom font-extrabold leading-tight text-amber-50">
+                        Kelezatan Autentik <br>
+                        <span class="bg-gradient-to-r from-amber-300 via-yellow-400 to-amber-500 bg-clip-text text-transparent">
+                            RUMAH MAKAN KOTO INDAH MASAKAN PADANG
+                        </span>
+                    </h1>
+                    
+                    <p class="text-stone-300 text-base sm:text-lg max-w-2xl font-normal leading-relaxed mx-auto lg:mx-0">
+                        Nikmati racikan bumbu rendang legendaris yang meresap hingga ke serat daging, kuah gulai kental gurih, dan sambal ijo autentik. Siap diantar panas-panas langsung ke lokasi Anda!
+                    </p>
+
+                    <div class="pt-4 flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                        <a href="#nasi-kotak-section" class="px-8 py-4 bg-gradient-to-r from-amber-500 to-padang-red hover:from-amber-600 hover:to-padang-darkred text-white font-bold rounded-2xl shadow-xl shadow-amber-900/40 hover:shadow-2xl transition transform hover:-translate-y-1 flex items-center justify-center gap-3">
+                            <i class="fa-solid fa-box-open"></i> Pesan Nasi Kotak
+                        </a>
+                        <a href="#menu-section" class="px-8 py-4 bg-stone-800 hover:bg-stone-700 text-amber-300 font-bold rounded-2xl border border-amber-500/30 transition flex items-center justify-center gap-3">
+                            <i class="fa-solid fa-utensils"></i> Katalog Menu Realtime
+                        </a>
+                    </div>
+
+                    <div class="pt-8 border-t border-stone-800 grid grid-cols-3 gap-4 text-center">
+                        <div>
+                            <p class="text-2xl font-extrabold text-amber-400">100%</p>
+                            <p class="text-xs text-stone-400 font-medium">Bumbu Minang Asli</p>
+                        </div>
+                        <div>
+                            <p class="text-2xl font-extrabold text-amber-400">Live</p>
+                            <p class="text-xs text-stone-400 font-medium">Ketersediaan Stok</p>
+                        </div>
+                        <div>
+                            <p class="text-2xl font-extrabold text-amber-400">Cepat</p>
+                            <p class="text-xs text-stone-400 font-medium">Langsung ke WA</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-5 relative flex justify-center">
+                    <div class="relative w-full max-w-md">
+                        <div class="absolute inset-0 bg-gradient-to-tr from-padang-red to-amber-500 rounded-3xl transform rotate-3 scale-105 opacity-80 blur-sm"></div>
+                        <div class="relative bg-stone-800 p-3 rounded-3xl border border-amber-500/40 shadow-2xl overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1626777552726-4a6b54c97e46?q=80&w=800&auto=format&fit=crop" 
+                                 alt="Nasi Padang RM Koto Indah" 
+                                 class="w-full h-80 sm:h-96 object-cover rounded-2xl transform hover:scale-105 transition duration-500">
+                            
+                            <div class="absolute bottom-6 left-6 right-6 bg-stone-900/90 backdrop-blur-md p-4 rounded-xl border border-amber-500/30">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <span class="text-[10px] bg-red-600 text-white font-bold px-2 py-0.5 rounded-full uppercase">Paling Dicari</span>
+                                        <h3 class="text-amber-300 font-bold text-lg mt-1">Paket Komplit Rendang Sapi</h3>
+                                        <p class="text-stone-300 text-xs">Nasi + Rendang + Daun Singkong + Sambal</p>
+                                    </div>
+                                    <p class="text-amber-400 font-extrabold text-lg">Rp 28.000</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section id="about" class="py-12 bg-stone-100 border-b border-stone-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                
+                <div class="bg-white p-6 rounded-2xl border border-amber-100 shadow-sm hover:shadow-md transition flex items-start gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center flex-shrink-0 text-xl font-bold">
+                        <i class="fa-solid fa-pepper-hot"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-stone-900 text-lg">Bumbu Asli Payakumbuh</h4>
+                        <p class="text-stone-600 text-sm mt-1">Dibuat langsung dengan rempah pilihan, menciptakan rasa santan & gulai yang kental meresap.</p>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-2xl border border-amber-100 shadow-sm hover:shadow-md transition flex items-start gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-red-100 text-red-700 flex items-center justify-center flex-shrink-0 text-xl font-bold">
+                        <i class="fa-solid fa-circle-check"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-stone-900 text-lg">Bahan Segar & 100% Halal</h4>
+                        <p class="text-stone-600 text-sm mt-1">Diolah dari bahan-bahan segar pilihan setiap hari, 100% terjamin halal dan higienis tanpa bahan pengawet.</p>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-2xl border border-amber-100 shadow-sm hover:shadow-md transition flex items-start gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center flex-shrink-0 text-xl font-bold">
+                        <i class="fa-brands fa-whatsapp"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-stone-900 text-lg">Pesan Mudah via WhatsApp</h4>
+                        <p class="text-stone-600 text-sm mt-1">Pilih menu di katalog, klik checkout, rincian pesanan otomatis terisi ke WhatsApp resto.</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section id="nasi-kotak-section" class="py-16 bg-gradient-to-b from-stone-900 via-stone-800 to-stone-900 text-white relative overflow-hidden border-b border-amber-600/30">
+        <div class="absolute inset-0 opacity-10 bg-pattern pointer-events-none"></div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            
+            <div class="text-center max-w-3xl mx-auto mb-12">
+                <span class="text-xs font-extrabold uppercase tracking-widest text-amber-400 bg-amber-950/80 border border-amber-500/40 px-4 py-1.5 rounded-full inline-block mb-3">
+                    <i class="fa-solid fa-boxes-packing mr-1.5 text-amber-400"></i> Layanan Khusus Acara & Katering
+                </span>
+                <h2 class="text-3xl sm:text-4xl font-serif-custom font-extrabold text-stone-100">
+                    Pemesanan Nasi Kotak / Rice Box Padang
+                </h2>
+                <p class="text-stone-300 text-sm sm:text-base mt-2">
+                    Siap melayani porsi besar untuk rapat kantor, pengajian, syukuran, ulang tahun, & katering event.
+                </p>
+            </div>
+
+            <!-- Custom Nasi Box Builder Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                
+                <!-- Preset Boxes -->
+                <div class="lg:col-span-7 space-y-4">
+                    <h3 class="text-xl font-bold text-amber-300 flex items-center gap-2 mb-4">
+                        <i class="fa-solid fa-star text-amber-400"></i> Paket Nasi Kotak Favorit
+                    </h3>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        
+                        <!-- Box 1 -->
+                        <div class="bg-stone-800/90 border border-stone-700 hover:border-amber-500/50 p-5 rounded-2xl shadow-lg transition flex flex-col justify-between">
+                            <div>
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="text-[10px] bg-amber-500/20 text-amber-300 font-bold px-2.5 py-0.5 rounded-full border border-amber-500/30">PAKET HEMAT</span>
+                                    <span class="text-amber-400 font-extrabold text-base">Rp 23.000</span>
+                                </div>
+                                <h4 class="font-bold text-stone-100 text-base">Box Ayam Bakar Padang</h4>
+                                <ul class="text-xs text-stone-300 space-y-1 mt-2">
+                                    <li><i class="fa-solid fa-check text-emerald-400 mr-1.5"></i>Nasi Putih Warm</li>
+                                    <li><i class="fa-solid fa-check text-emerald-400 mr-1.5"></i>Ayam Bakar Bumbu Padang</li>
+                                    <li><i class="fa-solid fa-check text-emerald-400 mr-1.5"></i>Daun Singkong & Kuah Gulai</li>
+                                    <li><i class="fa-solid fa-check text-emerald-400 mr-1.5"></i>Sambal Hijau + Sendok & Tisu</li>
+                                </ul>
+                            </div>
+                            <button onclick="addPresetBox('Box Ayam Bakar Padang', 23000)" class="mt-4 w-full py-2.5 bg-amber-500/20 hover:bg-amber-500 text-amber-300 hover:text-stone-900 border border-amber-500/40 rounded-xl font-bold text-xs transition flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-cart-plus"></i> Tambah Box Ini
+                            </button>
+                        </div>
+
+                        <!-- Box 2 -->
+                        <div class="bg-stone-800/90 border border-amber-500/40 p-5 rounded-2xl shadow-lg transition flex flex-col justify-between relative overflow-hidden">
+                            <div>
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="text-[10px] bg-red-600 text-white font-extrabold px-2.5 py-0.5 rounded-full uppercase">Paling Laris</span>
+                                    <span class="text-amber-400 font-extrabold text-base">Rp 28.000</span>
+                                </div>
+                                <h4 class="font-bold text-stone-100 text-base">Box Rendang Sapi Komplit</h4>
+                                <ul class="text-xs text-stone-300 space-y-1 mt-2">
+                                    <li><i class="fa-solid fa-check text-emerald-400 mr-1.5"></i>Nasi Putih Warm</li>
+                                    <li><i class="fa-solid fa-check text-emerald-400 mr-1.5"></i>Rendang Daging Sapi Payakumbuh</li>
+                                    <li><i class="fa-solid fa-check text-emerald-400 mr-1.5"></i>Telur Dadar Padang / Sambal Teri</li>
+                                    <li><i class="fa-solid fa-check text-emerald-400 mr-1.5"></i>Gulai Nangka + Sendok & Tisu</li>
+                                </ul>
+                            </div>
+                            <button onclick="addPresetBox('Box Rendang Sapi Komplit', 28000)" class="mt-4 w-full py-2.5 bg-gradient-to-r from-amber-500 to-padang-red hover:from-amber-600 hover:to-padang-darkred text-white rounded-xl font-bold text-xs transition shadow flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-cart-plus"></i> Tambah Box Ini
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Custom Box Builder -->
+                <div class="lg:col-span-5 bg-stone-900/90 border border-amber-500/40 p-6 rounded-3xl shadow-2xl relative">
+                    <div class="flex items-center justify-between border-b border-stone-800 pb-4 mb-4">
+                        <div>
+                            <h3 class="text-lg font-bold text-amber-300 flex items-center gap-2">
+                                <i class="fa-solid fa-sliders text-amber-500"></i> Buat Nasi Box Custom
+                            </h3>
+                            <p class="text-xs text-stone-400">Pilih kombinasi lauk sesuai keinginan Anda</p>
+                        </div>
+                        <span class="text-[10px] bg-amber-500 text-stone-900 font-extrabold px-2 py-1 rounded">Bisa Request</span>
+                    </div>
+
+                    <div class="space-y-3">
+                        <div>
+                            <label class="block text-xs font-bold text-amber-200 mb-1">1. Lauk Utama</label>
+                            <select id="custom-main-dish" onchange="updateCustomBoxPrice()" class="w-full px-3 py-2 bg-stone-800 border border-stone-700 rounded-xl text-xs text-stone-100 focus:outline-none focus:border-amber-500">
+                                <option value="Rendang Sapi Payakumbuh|18000">Rendang Daging Sapi (+Rp 18.000)</option>
+                                <option value="Ayam Pop Bukittinggi|15000">Ayam Pop Khas (+Rp 15.000)</option>
+                                <option value="Ayam Bakar Padang|15000">Ayam Bakar Bumbu (+Rp 15.000)</option>
+                                <option value="Dendeng Batokok Balado|17000">Dendeng Batokok Balado (+Rp 17.000)</option>
+                                <option value="Gulai Tunjang Kikil|17000">Gulai Tunjang Kikil (+Rp 17.000)</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-amber-200 mb-1">2. Lauk Pendamping</label>
+                            <select id="custom-side-dish" onchange="updateCustomBoxPrice()" class="w-full px-3 py-2 bg-stone-800 border border-stone-700 rounded-xl text-xs text-stone-100 focus:outline-none focus:border-amber-500">
+                                <option value="Tanpa Lauk Tambahan|0">Tanpa Lauk Tambahan (Rp 0)</option>
+                                <option value="Telur Dadar Bumbu Padang|5000">Telur Dadar Padang (+Rp 5.000)</option>
+                                <option value="Perkedel Kentang|4000">Perkedel Kentang (+Rp 4.000)</option>
+                                <option value="Telur Balado|5000">Telur Balado (+Rp 5.000)</option>
+                            </select>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-3 pt-1">
+                            <div>
+                                <label class="block text-xs font-bold text-amber-200 mb-1">Jumlah Box</label>
+                                <input type="number" id="custom-box-qty" min="1" value="10" onchange="updateCustomBoxPrice()" onkeyup="updateCustomBoxPrice()" class="w-full px-3 py-2 bg-stone-800 border border-stone-700 rounded-xl text-xs text-stone-100 font-bold focus:outline-none focus:border-amber-500">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-amber-200 mb-1">Harga per Box</label>
+                                <div class="px-3 py-2 bg-stone-950 border border-amber-500/40 rounded-xl text-amber-400 font-extrabold text-sm flex items-center h-[38px]">
+                                    <span id="custom-unit-price">Rp 23.000</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="p-3 bg-stone-950/80 rounded-2xl border border-stone-800 flex items-center justify-between">
+                            <span class="text-xs text-stone-300 font-semibold">Subtotal Custom Box:</span>
+                            <span id="custom-total-price" class="text-amber-400 text-base font-extrabold">Rp 230.000</span>
+                        </div>
+
+                        <button onclick="addCustomBoxToCart()" class="w-full py-3 bg-gradient-to-r from-amber-500 to-padang-red hover:from-amber-600 hover:to-padang-darkred text-white font-extrabold text-xs rounded-2xl shadow-lg transition flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-cart-arrow-down text-base"></i> Masukkan Custom Nasi Box ke Keranjang
+                        </button>
+
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+    <section id="menu-section" class="py-16 bg-stone-50 flex-grow">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <div class="text-center max-w-3xl mx-auto mb-10">
+                <span class="text-xs font-extrabold uppercase tracking-widest text-padang-red bg-red-100 px-3 py-1 rounded-full">
+                    Sajikan Spesial RM Koto Indah
+                </span>
+                <h2 class="text-3xl sm:text-4xl font-serif-custom font-extrabold text-stone-900 mt-3">
+                    Pilihan Menu Lauk & Nasi Kotak
+                </h2>
+                <p class="text-stone-600 text-sm sm:text-base mt-2">
+                    Menu di bawah diperbarui secara otomatis dan langsung dari dapur resto.
+                </p>
+            </div>
+
+            <!-- Search and Category Filters -->
+            <div class="space-y-4 mb-8">
+                <div class="max-w-md mx-auto relative">
+                    <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-stone-400"></i>
+                    <input type="text" id="search-input" onkeyup="filterMenu()" placeholder="Cari rendang, ayam pop, jus..." 
+                           class="w-full pl-11 pr-4 py-3 rounded-2xl border border-stone-300 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm transition">
+                </div>
+
+                <div class="flex items-center justify-center gap-2 overflow-x-auto pb-2" id="category-pills">
+                    <button onclick="setCategory('semua')" class="cat-pill active-pill px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition whitespace-nowrap bg-stone-900 text-amber-400 shadow">
+                        <i class="fa-solid fa-border-all mr-1.5"></i> Semua Menu
+                    </button>
+                    <button onclick="setCategory('nasibox')" class="cat-pill px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition whitespace-nowrap bg-white text-stone-700 hover:bg-stone-200 shadow-sm border border-stone-200">
+                        <i class="fa-solid fa-boxes-packing mr-1.5 text-amber-600"></i> Nasi Kotak
+                    </button>
+                    <button onclick="setCategory('lauk')" class="cat-pill px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition whitespace-nowrap bg-white text-stone-700 hover:bg-stone-200 shadow-sm border border-stone-200">
+                        <i class="fa-solid fa-drumstick-bite mr-1.5 text-red-600"></i> Lauk Utama
+                    </button>
+                    <button onclick="setCategory('pelengkap')" class="cat-pill px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition whitespace-nowrap bg-white text-stone-700 hover:bg-stone-200 shadow-sm border border-stone-200">
+                        <i class="fa-solid fa-pepper-hot mr-1.5 text-green-600"></i> Sambal & Kuah
+                    </button>
+                    <button onclick="setCategory('minuman')" class="cat-pill px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition whitespace-nowrap bg-white text-stone-700 hover:bg-stone-200 shadow-sm border border-stone-200">
+                        <i class="fa-solid fa-glass-water mr-1.5 text-amber-500"></i> Minuman Khas
+                    </button>
+                </div>
+            </div>
+
+            <!-- Realtime Menu Container Grid -->
+            <div id="menu-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+                <!-- Loading Skeleton -->
+                <div class="col-span-full py-12 text-center text-stone-500">
+                    <i class="fa-solid fa-circle-notch fa-spin text-3xl text-amber-500 mb-3"></i>
+                    <p class="font-medium text-sm">Menghubungkan & Memuat Menu Realtime...</p>
+                </div>
+            </div>
+
+            <!-- Empty State -->
+            <div id="empty-state" class="hidden text-center py-16">
+                <div class="w-20 h-20 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center mx-auto text-3xl mb-4">
+                    <i class="fa-solid fa-utensils"></i>
+                </div>
+                <h3 class="text-xl font-bold text-stone-800">Menu tidak ditemukan</h3>
+                <p class="text-stone-500 text-sm mt-1">Coba gunakan kata kunci pencarian atau kategori lain.</p>
+            </div>
+
+        </div>
+    </section>
+
+    <section id="location" class="py-16 bg-stone-900 text-white relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+                <div class="lg:col-span-6 space-y-6">
+                    <span class="text-xs font-bold uppercase tracking-widest text-amber-400 bg-amber-950/60 border border-amber-500/30 px-3 py-1 rounded-full">
+                        Kunjungi Warung Kami
+                    </span>
+                    <h2 class="text-2xl sm:text-3xl font-serif-custom font-extrabold text-stone-100">
+                        RUMAH MAKAN KOTO INDAH MASAKAN PADANG
+                    </h2>
+                    <p class="text-stone-300 text-sm leading-relaxed">
+                        Datang langsung ke lokasi kami untuk menikmati hidangan hangat dalam suasana resto yang nyaman, atau pesan rombongan untuk acara kantor dan hajatan.
+                    </p>
+
+                    <div class="space-y-4 pt-2">
+                        <div class="flex items-start gap-4">
+                            <div class="w-10 h-10 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center shrink-0 border border-amber-500/30">
+                                <i class="fa-solid fa-location-dot"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-stone-200">Alamat Resto</h4>
+                                <p class="text-stone-400 text-sm">Rumah Makan Koto Indah Masakan Padang (Klik tombol petunjuk arah di bawah)</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start gap-4">
+                            <div class="w-10 h-10 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0 border border-emerald-500/30">
+                                <i class="fa-brands fa-whatsapp text-lg"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-stone-200">WhatsApp / Order Pemesanan</h4>
+                                <p class="text-emerald-400 text-sm font-semibold">+62 881-0117-23786</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-6">
+                    <div class="bg-stone-800 p-4 rounded-3xl border border-stone-700 shadow-2xl relative overflow-hidden">
+                        <div class="w-full h-72 rounded-2xl bg-stone-700 flex flex-col items-center justify-center text-center p-6 relative">
+                            <i class="fa-solid fa-map-location-dot text-6xl text-amber-500/60 mb-3"></i>
+                            <h3 class="text-lg font-bold text-white">Petunjuk Arah Google Maps</h3>
+                            <p class="text-xs text-stone-400 max-w-sm mt-1">Klik tombol di bawah ini untuk membuka peta lokasi Rumah Makan Koto Indah Masakan Padang.</p>
+                            <a href="https://maps.app.goo.gl/5P8Kn4yX6226QWeq7" target="_blank" rel="noopener noreferrer" class="mt-4 px-6 py-3 bg-amber-500 hover:bg-amber-600 text-stone-900 font-extrabold text-xs rounded-xl transition flex items-center gap-2 shadow-lg">
+                                <i class="fa-solid fa-diamond-turn-right text-base"></i> Buka Google Maps Resto
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-stone-950 text-stone-400 py-8 border-t border-stone-800 text-xs text-center relative">
+        <div class="max-w-7xl mx-auto px-4 space-y-2">
+            <p class="font-serif-custom text-amber-400 text-base font-bold mb-1">RUMAH MAKAN KOTO INDAH MASAKAN PADANG</p>
+            <p>© <span id="year">2026</span> - Hak Cipta Dilindungi. Dibuat khusus untuk pencinta kuliner Minang autentik.</p>
+            
+            <div class="pt-3">
+                <button onclick="openOwnerLogin()" class="text-stone-500 hover:text-amber-500 text-[11px] transition inline-flex items-center gap-1">
+                    <i class="fa-solid fa-lock text-[10px]"></i> Mode Pemilik / Admin Resto
+                </button>
+            </div>
+        </div>
+    </footer>
+
+    <!-- CART DRAWER -->
+    <div id="cart-drawer" class="fixed inset-0 z-50 overflow-hidden pointer-events-none transition-opacity duration-300 opacity-0">
+        <div id="cart-backdrop" onclick="toggleCartDrawer()" class="absolute inset-0 bg-stone-900/70 backdrop-blur-sm transition-opacity"></div>
+        <div class="fixed inset-y-0 right-0 max-w-full flex pl-10">
+            <div id="cart-panel" class="w-screen max-w-md bg-white shadow-2xl flex flex-col pointer-events-auto transform translate-x-full transition-transform duration-300">
+                <div class="p-5 bg-stone-900 text-white flex items-center justify-between border-b border-amber-600/30">
+                    <div class="flex items-center gap-3">
+                        <i class="fa-solid fa-basket-shopping text-amber-400 text-xl"></i>
+                        <div>
+                            <h3 class="font-bold text-lg text-amber-100">Keranjang Pesanan</h3>
+                            <p class="text-xs text-stone-400">RM Koto Indah Masakan Padang</p>
+                        </div>
+                    </div>
+                    <button onclick="toggleCartDrawer()" class="text-stone-400 hover:text-white p-2">
+                        <i class="fa-solid fa-xmark text-xl"></i>
+                    </button>
+                </div>
+
+                <div class="flex-1 overflow-y-auto p-5 space-y-4" id="cart-items-container">
+                    <!-- Items rendered by JS -->
+                </div>
+
+                <div class="p-5 bg-stone-50 border-t border-stone-200 space-y-4">
+                    <div class="flex items-center justify-between font-bold text-stone-900 text-lg border-b border-stone-200 pb-3">
+                        <span>Total Pembayaran:</span>
+                        <span id="cart-total-price" class="text-padang-red text-xl font-extrabold">Rp 0</span>
+                    </div>
+
+                    <div class="space-y-3">
+                        <div>
+                            <label class="block text-xs font-bold text-stone-700 uppercase mb-1">Nama Pemesan *</label>
+                            <input type="text" id="cust-name" placeholder="Contoh: Budi Prasetyo" 
+                                   class="w-full px-3 py-2 rounded-xl border border-stone-300 text-xs focus:ring-2 focus:ring-amber-500 focus:outline-none bg-white">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-stone-700 uppercase mb-1">Tipe Pesanan</label>
+                            <select id="cust-type" class="w-full px-3 py-2 rounded-xl border border-stone-300 text-xs focus:ring-2 focus:ring-amber-500 focus:outline-none bg-white">
+                                <option value="Pesanan Nasi Kotak / Katering Acara">Pesanan Nasi Kotak / Katering Acara</option>
+                                <option value="Delivery / Antar ke Rumah">Delivery / Antar ke Rumah</option>
+                                <option value="Take Away / Ambil Sendiri">Take Away / Ambil Sendiri</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-stone-700 uppercase mb-1">Alamat Pengiriman (Jika Antar)</label>
+                            <input type="text" id="cust-address" placeholder="Contoh: Jl. Merdeka No. 45" 
+                                   class="w-full px-3 py-2 rounded-xl border border-stone-300 text-xs focus:ring-2 focus:ring-amber-500 focus:outline-none bg-white">
+                        </div>
+                    </div>
+
+                    <button onclick="processCheckoutWA()" class="w-full py-3.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 text-white font-extrabold rounded-2xl shadow-lg transition flex items-center justify-center gap-2 text-sm">
+                        <i class="fa-brands fa-whatsapp text-lg"></i> Kirim Pesanan ke WhatsApp Resto
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- OWNER PIN LOGIN MODAL -->
+    <div id="login-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-stone-900/80 backdrop-blur-md hidden">
+        <div class="bg-white w-full max-w-sm rounded-3xl shadow-2xl overflow-hidden border border-amber-500/30 p-6 text-center space-y-4">
+            <div class="w-14 h-14 bg-amber-100 text-amber-600 rounded-2xl flex items-center justify-center mx-auto text-2xl shadow-sm">
+                <i class="fa-solid fa-user-lock"></i>
+            </div>
+            <div>
+                <h3 class="font-bold text-lg text-stone-900">Akses Pemilik Resto</h3>
+                <p class="text-xs text-stone-500 mt-1">Masukkan PIN Rahasia Pemilik</p>
+            </div>
+
+            <div>
+                <input type="password" id="owner-pin-input" placeholder="PIN Rahasia (Default: 1234)" 
+                       class="w-full text-center tracking-widest text-lg font-bold px-4 py-3 rounded-xl border border-stone-300 focus:ring-2 focus:ring-amber-500 focus:outline-none"
+                       onkeypress="if(event.key === 'Enter') verifyOwnerPin()">
+                <p id="pin-error" class="text-xs text-red-600 font-bold mt-1.5 hidden">PIN Salah! Silakan coba lagi.</p>
+            </div>
+
+            <div class="flex gap-2 pt-2">
+                <button onclick="closeOwnerLogin()" class="w-1/2 py-2.5 bg-stone-200 hover:bg-stone-300 text-stone-700 font-bold rounded-xl text-xs transition">
+                    Batal
+                </button>
+                <button onclick="verifyOwnerPin()" class="w-1/2 py-2.5 bg-amber-500 hover:bg-amber-600 text-stone-900 font-extrabold rounded-xl text-xs transition shadow">
+                    Masuk
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- OWNER REALTIME MENU MANAGEMENT MODAL -->
+    <div id="admin-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-stone-900/80 backdrop-blur-md hidden">
+        <div class="bg-white w-full max-w-3xl rounded-3xl shadow-2xl overflow-hidden border border-amber-500/30 flex flex-col max-h-[90vh]">
+            
+            <!-- Header -->
+            <div class="bg-stone-900 p-5 text-white flex items-center justify-between border-b border-amber-600/30">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-amber-500/20 flex items-center justify-center text-amber-400">
+                        <i class="fa-solid fa-user-gear text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-lg text-amber-100">Kelola Menu RM Koto Indah (Realtime)</h3>
+                        <p class="text-xs text-stone-400">Setiap perubahan langsung diperbarui otomatis di layar pembeli</p>
+                    </div>
+                </div>
+                <button onclick="toggleAdminModal()" class="text-stone-400 hover:text-white p-2">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+
+            <!-- Body -->
+            <div class="p-6 overflow-y-auto space-y-6 flex-1">
+                
+                <!-- Add / Edit Form -->
+                <form id="menu-form" onsubmit="saveMenuItem(event)" class="bg-stone-50 p-5 rounded-2xl border border-stone-200 space-y-4">
+                    <div class="flex items-center justify-between">
+                        <h4 class="font-bold text-stone-800 text-sm flex items-center gap-2">
+                            <i class="fa-solid fa-pen-to-square text-amber-600"></i>
+                            <span id="form-title">Tambah Menu Baru</span>
+                        </h4>
+                        <button type="button" id="cancel-edit-btn" onclick="resetAdminForm()" class="hidden text-xs text-red-600 hover:underline font-bold">
+                            Batal Edit
+                        </button>
+                    </div>
+
+                    <input type="hidden" id="edit-menu-id">
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-stone-700 mb-1">Nama Menu *</label>
+                            <input type="text" id="menu-name" required placeholder="Contoh: Rendang Daging Sapi Payakumbuh" 
+                                   class="w-full px-3 py-2 rounded-xl border border-stone-300 text-xs focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-stone-700 mb-1">Kategori Menu *</label>
+                            <select id="menu-category" required class="w-full px-3 py-2 rounded-xl border border-stone-300 text-xs focus:ring-2 focus:ring-amber-500 focus:outline-none bg-white">
+                                <option value="lauk">Lauk Utama</option>
+                                <option value="nasibox">Nasi Kotak / Box</option>
+                                <option value="pelengkap">Sambal & Kuah</option>
+                                <option value="minuman">Minuman Khas</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-stone-700 mb-1">Harga (Rp) *</label>
+                            <input type="number" id="menu-price" min="0" required placeholder="22000" 
+                                   class="w-full px-3 py-2 rounded-xl border border-stone-300 text-xs focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-stone-700 mb-1">Status Ketersediaan</label>
+                            <select id="menu-available" class="w-full px-3 py-2 rounded-xl border border-stone-300 text-xs focus:ring-2 focus:ring-amber-500 focus:outline-none bg-white">
+                                <option value="true">Tersedia (Ready)</option>
+                                <option value="false">Habis (Sold Out)</option>
+                            </select>
+                        </div>
+
+                        <div class="sm:col-span-2">
+                            <label class="block text-xs font-bold text-stone-700 mb-1">URL Gambar Menu (Foto)</label>
+                            <input type="url" id="menu-image" placeholder="https://images.unsplash.com/..." 
+                                   class="w-full px-3 py-2 rounded-xl border border-stone-300 text-xs focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                        </div>
+
+                        <div class="sm:col-span-2">
+                            <label class="block text-xs font-bold text-stone-700 mb-1">Deskripsi Singkat</label>
+                            <textarea id="menu-desc" rows="2" placeholder="Deskripsi rasa, bahan, atau porsi..." 
+                                      class="w-full px-3 py-2 rounded-xl border border-stone-300 text-xs focus:ring-2 focus:ring-amber-500 focus:outline-none"></textarea>
+                        </div>
+                    </div>
+
+                    <button type="submit" id="save-menu-btn" class="w-full py-3 bg-gradient-to-r from-amber-500 to-padang-red hover:from-amber-600 text-white font-extrabold rounded-xl shadow transition text-xs flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-cloud-arrow-up text-sm"></i> <span id="save-btn-text">Simpan Menu ke Realtime Server</span>
+                    </button>
+                </form>
+
+                <!-- Admin List View -->
+                <div>
+                    <h4 class="font-bold text-stone-800 text-sm mb-3 flex items-center justify-between">
+                        <span>Daftar Menu Saat Ini (<span id="admin-menu-count">0</span>)</span>
+                        <span class="text-[11px] text-emerald-600 font-semibold flex items-center gap-1">
+                            <i class="fa-solid fa-rotate fa-spin"></i> Syncing Live
+                        </span>
+                    </h4>
+
+                    <div id="admin-menu-list" class="space-y-2 max-h-60 overflow-y-auto pr-1">
+                        <!-- Items rendered dynamically -->
+                    </div>
+                </div>
+
+                <!-- Realtime PIN Management Section -->
+                <div class="bg-amber-50 p-4 rounded-2xl border border-amber-200 space-y-3">
+                    <h4 class="font-bold text-stone-800 text-xs flex items-center gap-2">
+                        <i class="fa-solid fa-key text-amber-600"></i>
+                        <span>Pengaturan PIN Pemilik Resto (Realtime Sync)</span>
+                    </h4>
+                    <div class="flex items-center gap-2">
+                        <input type="password" id="new-owner-pin" placeholder="Masukkan PIN baru (min. 4 karakter)" 
+                               class="flex-1 px-3 py-2 rounded-xl border border-stone-300 text-xs focus:ring-2 focus:ring-amber-500 focus:outline-none bg-white">
+                        <button type="button" onclick="updateOwnerPin()" class="px-4 py-2 bg-stone-900 hover:bg-amber-600 text-amber-300 hover:text-white font-bold rounded-xl text-xs transition shrink-0 shadow">
+                            Simpan PIN Baru
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- CUSTOM TOAST NOTIFICATION -->
+    <div id="toast-container" class="fixed top-24 right-4 z-50 pointer-events-none space-y-2"></div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, doc, addDoc, setDoc, updateDoc, deleteDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Global Firebase Setup
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'rm-koto-indah-app';
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {
+            apiKey: "AIzaSyDemoKeyOnly",
+            authDomain: "demo.firebaseapp.com",
+            projectId: "demo-project",
+            storageBucket: "demo.appspot.com",
+            messagingSenderId: "123456789",
+            appId: "1:123456789:web:demo"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+
+        let currentUser = null;
+        let menuItemsList = [];
+        let activeCategory = 'semua';
+        let searchQuery = '';
+        let cart = [];
+        let isOwnerLoggedIn = false;
+        let logoClickCount = 0;
+        let logoClickTimer = null;
+        let ownerPin = '1234'; // Default PIN jika belum diubah di cloud
+
+        // Default initial menu items to seed if database is empty
+        const defaultMenuItems = [
+            {
+                name: "Rendang Daging Sapi Payakumbuh",
+                category: "lauk",
+                price: 22000,
+                available: true,
+                image: "https://images.unsplash.com/photo-1626777552726-4a6b54c97e46?q=80&w=800&auto=format&fit=crop",
+                description: "Daging sapi pilihan dimasak empuk dengan santan kental & bumbu rempah khas Minang."
+            },
+            {
+                name: "Ayam Pop Bukittinggi",
+                category: "lauk",
+                price: 20000,
+                available: true,
+                image: "https://images.unsplash.com/photo-1598515214211-89d3c73ae83b?q=80&w=800&auto=format&fit=crop",
+                description: "Ayam empuk gurih dimasak santan, disajikan dengan sambal merah khas Ayam Pop."
+            },
+            {
+                name: "Ayam Bakar Bumbu Padang",
+                category: "lauk",
+                price: 20000,
+                available: true,
+                image: "https://images.unsplash.com/photo-1610057099443-fde8c4d50f91?q=80&w=800&auto=format&fit=crop",
+                description: "Ayam panggang dengan olesan bumbu padang manis gurih meresap sampai ke tulang."
+            },
+            {
+                name: "Dendeng Batokok Balado",
+                category: "lauk",
+                price: 22000,
+                available: true,
+                image: "https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=800&auto=format&fit=crop",
+                description: "Dendeng sapi renyah yang dipukul halus lalu disiram balado cabai merah segar."
+            },
+            {
+                name: "Gulai Tunjang Kikil",
+                category: "lauk",
+                price: 24000,
+                available: true,
+                image: "https://images.unsplash.com/photo-1541544741938-0af808871cc0?q=80&w=800&auto=format&fit=crop",
+                description: "Kikil sapi empuk lembut dalam kuah gulai kental rempah padang kaya rasa."
+            },
+            {
+                name: "Nasi Box Paket Rendang Komplit",
+                category: "nasibox",
+                price: 28000,
+                available: true,
+                image: "https://images.unsplash.com/photo-1626777552726-4a6b54c97e46?q=80&w=800&auto=format&fit=crop",
+                description: "Nasi hangat + Rendang Daging Sapi + Telur Dadar + Daun Singkong + Sambal Ijo & Sendok Set."
+            },
+            {
+                name: "Nasi Box Paket Ayam Bakar",
+                category: "nasibox",
+                price: 23000,
+                available: true,
+                image: "https://images.unsplash.com/photo-1610057099443-fde8c4d50f91?q=80&w=800&auto=format&fit=crop",
+                description: "Nasi hangat + Ayam Bakar Padang + Daun Singkong + Kuah Gulai + Sambal Ijo."
+            },
+            {
+                name: "Sambal Hijau Khas Padang",
+                category: "pelengkap",
+                price: 5000,
+                available: true,
+                image: "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?q=80&w=800&auto=format&fit=crop",
+                description: "Sambal cabai hijau tanak dengan minyak kelapa asli & ikan teri goreng."
+            },
+            {
+                name: "Teh Talua Khas Minang",
+                category: "minuman",
+                price: 12000,
+                available: true,
+                image: "https://images.unsplash.com/photo-1576092768241-dec231879fc3?q=80&w=800&auto=format&fit=crop",
+                description: "Minuman kesehatan tradisional kocok telur, teh hitam pekat, jeruk nipis & kayu manis."
+            }
+        ];
+
+        async function initAuth() {
+            try {
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
+            } catch (err) {
+                console.error("Auth Exception:", err);
+            }
+        }
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                currentUser = user;
+                subscribeToRealtimeMenu();
+                subscribeToSettings();
+            }
+        });
+
+        function subscribeToSettings() {
+            if (!currentUser) return;
+            // Listen realtime to owner settings
+            const settingsDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'settings', 'config');
+            onSnapshot(settingsDocRef, (docSnap) => {
+                if (docSnap.exists() && docSnap.data().pin) {
+                    ownerPin = String(docSnap.data().pin);
+                }
+            }, (error) => {
+                console.error("Error syncing settings:", error);
+            });
+        }
+
+        function subscribeToRealtimeMenu() {
+            if (!currentUser) return;
+            // Strict Path Enforcement
+            const menuColRef = collection(db, 'artifacts', appId, 'public', 'data', 'menu');
+
+            onSnapshot(menuColRef, async (snapshot) => {
+                let items = [];
+                snapshot.forEach((docSnap) => {
+                    items.push({ id: docSnap.id, ...docSnap.data() });
+                });
+
+                if (items.length === 0) {
+                    // Seed initial data if database is empty
+                    await seedInitialData(menuColRef);
+                } else {
+                    menuItemsList = items;
+                    renderMenu();
+                    renderAdminList();
+                }
+            }, (error) => {
+                console.error("Firestore Realtime Error:", error);
+                showToast("Gagal memuat update realtime menu", "error");
+            });
+        }
+
+        async function seedInitialData(colRef) {
+            try {
+                for (const item of defaultMenuItems) {
+                    await addDoc(colRef, {
+                        ...item,
+                        createdAt: Date.now()
+                    });
+                }
+            } catch (e) {
+                console.error("Error seeding initial menu:", e);
+            }
+        }
+
+        function renderMenu() {
+            const grid = document.getElementById('menu-grid');
+            const empty = document.getElementById('empty-state');
+            
+            if (!grid) return;
+
+            let filtered = menuItemsList.filter(item => {
+                const matchCat = (activeCategory === 'semua') || (item.category === activeCategory);
+                const matchSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                                    (item.description && item.description.toLowerCase().includes(searchQuery.toLowerCase()));
+                return matchCat && matchSearch;
+            });
+
+            if (filtered.length === 0) {
+                grid.innerHTML = '';
+                empty.classList.remove('hidden');
+                return;
+            }
+
+            empty.classList.add('hidden');
+            grid.innerHTML = filtered.map(item => {
+                const isAvailable = item.available !== false;
+                const formattedPrice = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(item.price);
+                const fallbackImg = 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=800&auto=format&fit=crop';
+
+                return `
+                    <div class="bg-white rounded-3xl overflow-hidden border border-stone-200 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between group relative">
+                        <div>
+                            <div class="relative h-48 sm:h-52 overflow-hidden bg-stone-100">
+                                <img src="${item.image || fallbackImg}" 
+                                     alt="${item.name}" 
+                                     onerror="this.src='${fallbackImg}'"
+                                     class="w-full h-full object-cover group-hover:scale-105 transition duration-500 ${!isAvailable ? 'grayscale opacity-60' : ''}">
+                                
+                                <div class="absolute top-3 left-3 flex flex-wrap gap-1">
+                                    <span class="text-[10px] font-extrabold uppercase tracking-wider px-2.5 py-1 rounded-lg bg-stone-900/80 text-amber-300 backdrop-blur-md">
+                                        ${getCategoryLabel(item.category)}
+                                    </span>
+                                </div>
+
+                                <div class="absolute top-3 right-3">
+                                    <span class="text-[10px] font-bold px-2.5 py-1 rounded-lg backdrop-blur-md ${isAvailable ? 'bg-emerald-600 text-white' : 'bg-red-600 text-white'}">
+                                        ${isAvailable ? '✓ Tersedia' : '✕ Stok Habis'}
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="p-5 space-y-2">
+                                <h3 class="font-bold text-stone-900 text-lg group-hover:text-amber-700 transition leading-snug">
+                                    ${escapeHtml(item.name)}
+                                </h3>
+                                <p class="text-stone-500 text-xs line-clamp-2 leading-relaxed">
+                                    ${escapeHtml(item.description || 'Sajian lezat autentik Minang khas RM Koto Indah.')}
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="p-5 pt-0 flex items-center justify-between border-t border-stone-100 mt-2 pt-4">
+                            <div>
+                                <span class="text-[10px] text-stone-400 font-bold block">HARGA</span>
+                                <span class="text-amber-700 font-extrabold text-lg">${formattedPrice}</span>
+                            </div>
+
+                            <div class="flex items-center gap-2">
+                                ${isOwnerLoggedIn ? `
+                                    <button onclick="editMenuItem('${item.id}')" title="Edit Menu Owner" class="bg-amber-100 hover:bg-amber-200 text-amber-800 p-2.5 rounded-xl text-xs font-bold transition">
+                                        <i class="fa-solid fa-pen"></i>
+                                    </button>
+                                ` : ''}
+
+                                <button onclick="addToCart('${item.id}')" ${!isAvailable ? 'disabled' : ''} 
+                                        class="px-4 py-2.5 bg-stone-900 hover:bg-amber-600 text-amber-300 hover:text-white disabled:bg-stone-200 disabled:text-stone-400 font-bold rounded-xl text-xs transition flex items-center gap-2 shadow">
+                                    <i class="fa-solid fa-cart-plus"></i>
+                                    <span>${isAvailable ? 'Pesan' : 'Habis'}</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function getCategoryLabel(cat) {
+            switch(cat) {
+                case 'nasibox': return 'Nasi Kotak';
+                case 'lauk': return 'Lauk Utama';
+                case 'pelengkap': return 'Sambal & Kuah';
+                case 'minuman': return 'Minuman';
+                default: return 'Menu';
+            }
+        }
+
+        window.saveMenuItem = async function(event) {
+            event.preventDefault();
+            if (!currentUser) return;
+
+            const menuId = document.getElementById('edit-menu-id').value;
+            const name = document.getElementById('menu-name').value.trim();
+            const category = document.getElementById('menu-category').value;
+            const price = parseFloat(document.getElementById('menu-price').value) || 0;
+            const available = document.getElementById('menu-available').value === 'true';
+            const image = document.getElementById('menu-image').value.trim();
+            const description = document.getElementById('menu-desc').value.trim();
+
+            if (!name) return;
+
+            const saveBtn = document.getElementById('save-menu-btn');
+            const saveText = document.getElementById('save-btn-text');
+            saveBtn.disabled = true;
+            saveText.innerText = 'Menyimpan ke Cloud...';
+
+            try {
+                const colRef = collection(db, 'artifacts', appId, 'public', 'data', 'menu');
+
+                if (menuId) {
+                    // Update existing
+                    const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'menu', menuId);
+                    await updateDoc(docRef, {
+                        name, category, price, available, image, description,
+                        updatedAt: Date.now()
+                    });
+                    showToast("Menu berhasil diperbarui secara realtime!", "success");
+                } else {
+                    // Create new
+                    await addDoc(colRef, {
+                        name, category, price, available, image, description,
+                        createdAt: Date.now()
+                    });
+                    showToast("Menu baru berhasil ditambahkan secara realtime!", "success");
+                }
+
+                resetAdminForm();
+            } catch (err) {
+                console.error("Save Error:", err);
+                showToast("Gagal menyimpan menu!", "error");
+            } finally {
+                saveBtn.disabled = false;
+                saveText.innerText = 'Simpan Menu ke Realtime Server';
+            }
+        };
+
+        window.deleteMenuItem = async function(id) {
+            if (!currentUser || !id) return;
+
+            try {
+                const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'menu', id);
+                await deleteDoc(docRef);
+                showToast("Menu dihapus secara realtime", "info");
+            } catch (err) {
+                console.error("Delete Error:", err);
+                showToast("Gagal menghapus menu", "error");
+            }
+        };
+
+        window.toggleAvailableStatus = async function(id, currentStatus) {
+            if (!currentUser || !id) return;
+            try {
+                const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'menu', id);
+                await updateDoc(docRef, {
+                    available: !currentStatus,
+                    updatedAt: Date.now()
+                });
+                showToast(`Status stok diubah menjadi ${!currentStatus ? 'Tersedia' : 'Habis'}`, "success");
+            } catch (err) {
+                console.error("Toggle Error:", err);
+            }
+        };
+
+        window.editMenuItem = function(id) {
+            const item = menuItemsList.find(m => m.id === id);
+            if (!item) return;
+
+            openAdminModal();
+
+            document.getElementById('edit-menu-id').value = item.id;
+            document.getElementById('menu-name').value = item.name;
+            document.getElementById('menu-category').value = item.category;
+            document.getElementById('menu-price').value = item.price;
+            document.getElementById('menu-available').value = item.available !== false ? 'true' : 'false';
+            document.getElementById('menu-image').value = item.image || '';
+            document.getElementById('menu-desc').value = item.description || '';
+
+            document.getElementById('form-title').innerText = 'Edit Menu (' + item.name + ')';
+            document.getElementById('cancel-edit-btn').classList.remove('hidden');
+        };
+
+        window.resetAdminForm = function() {
+            document.getElementById('menu-form').reset();
+            document.getElementById('edit-menu-id').value = '';
+            document.getElementById('form-title').innerText = 'Tambah Menu Baru';
+            document.getElementById('cancel-edit-btn').classList.add('hidden');
+        };
+
+        function renderAdminList() {
+            const list = document.getElementById('admin-menu-list');
+            const count = document.getElementById('admin-menu-count');
+            if (!list) return;
+
+            count.innerText = menuItemsList.length;
+
+            if (menuItemsList.length === 0) {
+                list.innerHTML = `<p class="text-xs text-stone-400 italic text-center py-4">Belum ada menu di database.</p>`;
+                return;
+            }
+
+            list.innerHTML = menuItemsList.map(item => `
+                <div class="p-3 bg-white rounded-xl border border-stone-200 flex items-center justify-between gap-3 text-xs">
+                    <div class="flex items-center gap-3 overflow-hidden">
+                        <img src="${item.image || 'https://placehold.co/100'}" class="w-10 h-10 rounded-lg object-cover flex-shrink-0">
+                        <div class="truncate">
+                            <p class="font-bold text-stone-800 truncate">${escapeHtml(item.name)}</p>
+                            <p class="text-[10px] text-stone-500">Rp ${item.price.toLocaleString('id-ID')} • <span class="capitalize">${item.category}</span></p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-1.5 shrink-0">
+                        <button onclick="toggleAvailableStatus('${item.id}', ${item.available !== false})" 
+                                class="px-2 py-1 rounded-md text-[10px] font-bold ${item.available !== false ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-700'}">
+                            ${item.available !== false ? 'Tersedia' : 'Habis'}
+                        </button>
+                        <button onclick="editMenuItem('${item.id}')" class="p-1.5 bg-amber-100 text-amber-800 rounded-md hover:bg-amber-200">
+                            <i class="fa-solid fa-pen"></i>
+                        </button>
+                        <button onclick="deleteMenuItem('${item.id}')" class="p-1.5 bg-red-100 text-red-700 rounded-md hover:bg-red-200">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        window.addToCart = function(id) {
+            const item = menuItemsList.find(m => m.id === id);
+            if (!item || item.available === false) return;
+
+            const existing = cart.find(c => c.id === id);
+            if (existing) {
+                existing.qty += 1;
+            } else {
+                cart.push({
+                    id: item.id,
+                    name: item.name,
+                    price: item.price,
+                    qty: 1
+                });
+            }
+
+            updateCartUI();
+            showToast(`${item.name} ditambahkan ke keranjang`, "success");
+        };
+
+        window.addPresetBox = function(name, price) {
+            const existing = cart.find(c => c.name === name);
+            if (existing) {
+                existing.qty += 1;
+            } else {
+                cart.push({
+                    id: 'preset-' + Date.now(),
+                    name: name,
+                    price: price,
+                    qty: 1
+                });
+            }
+            updateCartUI();
+            toggleCartDrawer(true);
+            showToast(`${name} ditambahkan!`, "success");
+        };
+
+        window.addCustomBoxToCart = function() {
+            const mainSelect = document.getElementById('custom-main-dish').value.split('|');
+            const sideSelect = document.getElementById('custom-side-dish').value.split('|');
+            const qty = parseInt(document.getElementById('custom-box-qty').value) || 1;
+
+            const mainName = mainSelect[0];
+            const mainPrice = parseFloat(mainSelect[1]) || 0;
+            const sideName = sideSelect[0];
+            const sidePrice = parseFloat(sideSelect[1]) || 0;
+
+            const unitPrice = 5000 + mainPrice + sidePrice; // Nasi + Kemasan Base = 5000
+            const customName = `Custom Nasi Box (${mainName}${sideName !== 'Tanpa Lauk Tambahan' ? ' + ' + sideName : ''})`;
+
+            cart.push({
+                id: 'custom-' + Date.now(),
+                name: customName,
+                price: unitPrice,
+                qty: qty
+            });
+
+            updateCartUI();
+            toggleCartDrawer(true);
+            showToast(`${qty} Custom Nasi Box dimasukkan ke keranjang!`, "success");
+        };
+
+        window.updateCustomBoxPrice = function() {
+            const mainSelect = document.getElementById('custom-main-dish').value.split('|');
+            const sideSelect = document.getElementById('custom-side-dish').value.split('|');
+            const qty = parseInt(document.getElementById('custom-box-qty').value) || 1;
+
+            const unitPrice = 5000 + parseFloat(mainSelect[1] || 0) + parseFloat(sideSelect[1] || 0);
+            const totalPrice = unitPrice * qty;
+
+            document.getElementById('custom-unit-price').innerText = 'Rp ' + unitPrice.toLocaleString('id-ID');
+            document.getElementById('custom-total-price').innerText = 'Rp ' + totalPrice.toLocaleString('id-ID');
+        };
+
+        window.updateCartQty = function(index, change) {
+            if (cart[index]) {
+                cart[index].qty += change;
+                if (cart[index].qty <= 0) {
+                    cart.splice(index, 1);
+                }
+                updateCartUI();
+            }
+        };
+
+        function updateCartUI() {
+            const container = document.getElementById('cart-items-container');
+            const totalDisplay = document.getElementById('cart-total-price');
+            const badge = document.getElementById('cart-badge');
+
+            const totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
+            const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+
+            badge.innerText = totalItems;
+
+            if (cart.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-12 text-stone-400">
+                        <i class="fa-solid fa-basket-shopping text-4xl mb-2 text-stone-300"></i>
+                        <p class="text-xs font-semibold">Keranjang Anda masih kosong</p>
+                    </div>
+                `;
+            } else {
+                container.innerHTML = cart.map((item, idx) => `
+                    <div class="p-3 bg-stone-50 rounded-2xl border border-stone-200 flex items-center justify-between gap-3 text-xs">
+                        <div class="flex-1">
+                            <h4 class="font-bold text-stone-800 leading-snug">${escapeHtml(item.name)}</h4>
+                            <p class="text-amber-700 font-extrabold mt-0.5">Rp ${(item.price * item.qty).toLocaleString('id-ID')}</p>
+                        </div>
+                        <div class="flex items-center gap-2 bg-white px-2 py-1 rounded-xl border border-stone-200">
+                            <button onclick="updateCartQty(${idx}, -1)" class="w-6 h-6 rounded-lg bg-stone-100 hover:bg-stone-200 flex items-center justify-center font-bold text-stone-700">-</button>
+                            <span class="font-extrabold text-stone-900 w-4 text-center">${item.qty}</span>
+                            <button onclick="updateCartQty(${idx}, 1)" class="w-6 h-6 rounded-lg bg-stone-100 hover:bg-stone-200 flex items-center justify-center font-bold text-stone-700">+</button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            totalDisplay.innerText = 'Rp ' + totalPrice.toLocaleString('id-ID');
+        }
+
+        window.processCheckoutWA = function() {
+            if (cart.length === 0) {
+                showToast("Keranjang Anda masih kosong!", "error");
+                return;
+            }
+
+            const name = document.getElementById('cust-name').value.trim();
+            const type = document.getElementById('cust-type').value;
+            const address = document.getElementById('cust-address').value.trim();
+
+            if (!name) {
+                showToast("Silakan isi nama pemesan terlebih dahulu", "error");
+                return;
+            }
+
+            let msg = `*PESANAN RM KOTO INDAH MASAKAN PADANG*\n\n`;
+            msg += `👤 *Nama Pemesan:* ${name}\n`;
+            msg += `📋 *Tipe Pesanan:* ${type}\n`;
+            if (address) msg += `📍 *Alamat:* ${address}\n`;
+            msg += `\n*DETAIL PESANAN:*\n`;
+
+            let grandTotal = 0;
+            cart.forEach((item, idx) => {
+                const sub = item.price * item.qty;
+                grandTotal += sub;
+                msg += `${idx + 1}. ${item.name} (${item.qty}x) = Rp ${sub.toLocaleString('id-ID')}\n`;
+            });
+
+            msg += `\n💰 *TOTAL PEMBAYARAN:* Rp ${grandTotal.toLocaleString('id-ID')}\n\n`;
+            msg += `Mohon diproses pesanan saya, Terima Kasih! 🙏`;
+
+            const phone = "62881011723786";
+            const url = `https://api.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(msg)}`;
+            window.open(url, '_blank');
+        };
+
+        window.handleLogoClick = function() {
+            logoClickCount++;
+            clearTimeout(logoClickTimer);
+
+            if (logoClickCount >= 3) {
+                logoClickCount = 0;
+                openOwnerLogin();
+            } else {
+                logoClickTimer = setTimeout(() => { logoClickCount = 0; }, 1000);
+            }
+        };
+
+        window.openOwnerLogin = function() {
+            if (isOwnerLoggedIn) {
+                openAdminModal();
+                return;
+            }
+            document.getElementById('login-modal').classList.remove('hidden');
+            document.getElementById('owner-pin-input').value = '';
+            document.getElementById('pin-error').classList.add('hidden');
+        };
+
+        window.closeOwnerLogin = function() {
+            document.getElementById('login-modal').classList.add('hidden');
+        };
+
+        window.verifyOwnerPin = function() {
+            const pin = document.getElementById('owner-pin-input').value.trim();
+            if (pin === ownerPin) { // Validasi menggunakan PIN realtime dari cloud
+                isOwnerLoggedIn = true;
+                closeOwnerLogin();
+                openAdminModal();
+                renderMenu();
+                showToast("Berhasil masuk sebagai Pemilik Resto!", "success");
+            } else {
+                document.getElementById('pin-error').classList.remove('hidden');
+            }
+        };
+
+        window.updateOwnerPin = async function() {
+            if (!currentUser) return;
+            const newPin = document.getElementById('new-owner-pin').value.trim();
+            if (!newPin || newPin.length < 4) {
+                showToast("PIN minimal 4 karakter!", "error");
+                return;
+            }
+
+            try {
+                const settingsDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'settings', 'config');
+                await setDoc(settingsDocRef, { pin: newPin }, { merge: true });
+                document.getElementById('new-owner-pin').value = '';
+                showToast("PIN Pemilik berhasil diubah secara realtime!", "success");
+            } catch (err) {
+                console.error("Update PIN Error:", err);
+                showToast("Gagal memperbarui PIN!", "error");
+            }
+        };
+
+        window.openAdminModal = function() {
+            document.getElementById('admin-modal').classList.remove('hidden');
+            renderAdminList();
+        };
+
+        window.toggleAdminModal = function() {
+            document.getElementById('admin-modal').classList.toggle('hidden');
+        };
+
+        window.toggleCartDrawer = function(forceOpen = false) {
+            const drawer = document.getElementById('cart-drawer');
+            const panel = document.getElementById('cart-panel');
+
+            if (forceOpen || drawer.classList.contains('opacity-0')) {
+                drawer.classList.remove('opacity-0', 'pointer-events-none');
+                panel.classList.remove('translate-x-full');
+            } else {
+                drawer.classList.add('opacity-0', 'pointer-events-none');
+                panel.classList.add('translate-x-full');
+            }
+        };
+
+        window.setCategory = function(cat) {
+            activeCategory = cat;
+            document.querySelectorAll('.cat-pill').forEach(btn => {
+                btn.classList.remove('active-pill', 'bg-stone-900', 'text-amber-400');
+                btn.classList.add('bg-white', 'text-stone-700');
+            });
+            event.currentTarget.classList.add('active-pill', 'bg-stone-900', 'text-amber-400');
+            renderMenu();
+        };
+
+        window.filterMenu = function() {
+            searchQuery = document.getElementById('search-input').value;
+            renderMenu();
+        };
+
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            if (!container) return;
+
+            const toast = document.createElement('div');
+            const bg = type === 'success' ? 'bg-emerald-600' : type === 'error' ? 'bg-red-600' : 'bg-stone-900';
+
+            toast.className = `${bg} text-white text-xs font-bold px-4 py-3 rounded-2xl shadow-xl flex items-center gap-2 transform transition-all duration-300 translate-x-10 opacity-0 pointer-events-auto`;
+            toast.innerHTML = `<i class="fa-solid fa-circle-info text-sm"></i><span>${escapeHtml(message)}</span>`;
+
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.classList.remove('translate-x-10', 'opacity-0');
+            }, 50);
+
+            setTimeout(() => {
+                toast.classList.add('translate-x-10', 'opacity-0');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        function escapeHtml(str) {
+            return String(str || '').replace(/[&<>"']/g, function(m) {
+                return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[m];
+            });
+        }
+
+        // Initialize Application
+        window.onload = function() {
+            initAuth();
+            updateCustomBoxPrice();
+        };
+    </script>
+</body>
+</html>
