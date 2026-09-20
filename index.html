@@ -760,7 +760,7 @@
         function setupRealtimeListeners() {
             if (!currentUser) return;
 
-            const menuRef = collection(db, 'menu_items');
+            const menuRef = collection(db, 'menu');
             
             onSnapshot(menuRef, (snapshot) => {
                 window.menuItems = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
@@ -1121,10 +1121,10 @@
                 }
 
                 if (id) {
-                    await updateDoc(doc(db, 'menu_items', id), data);
+                    await updateDoc(doc(db, 'menu', id), data);
                     showToast("Menu berhasil diperbarui");
                 } else {
-                    await addDoc(collection(db, 'menu_items'), data);
+                    await addDoc(collection(db, 'menu'), data);
                     showToast("Menu baru ditambahkan");
                 }
                 resetAdminForm();
