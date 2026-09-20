@@ -443,7 +443,7 @@
                             </div>
                             <div>
                                 <h4 class="font-bold text-stone-200">Alamat Resto</h4>
-                                <p class="text-stone-400 text-sm">Rumah Makan Koto Indah Masakan Padang</p>
+                                <p class="text-stone-400 text-sm">Rumah Makan Koto Indah Masakan Padang (Klik tombol petunjuk arah di bawah)</p>
                             </div>
                         </div>
 
@@ -692,20 +692,20 @@
     <div id="toast-container" class="fixed bottom-5 left-1/2 transform -translate-x-1/2 z-[60] flex flex-col gap-2 pointer-events-none"></div>
 
     <script type="module">
-        // Firebase Modular SDK Imports
+        // Firebase Modular SDK Imports (Menggunakan onSnapshot untuk Realtime)
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc, setDoc, deleteDoc, onSnapshot, collection, addDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, deleteDoc, onSnapshot, collection, addDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // Menggunakan Firebase Config Milik Anda
         const firebaseConfig = {
-            apiKey: "AIzaSyD7sjq_qs7ibKDmevJWxO6N8qNXNbZH_qE",
-            authDomain: "gilangranggaid.firebaseapp.com",
-            projectId: "gilangranggaid",
-            storageBucket: "gilangranggaid.firebasestorage.app",
-            messagingSenderId: "233964920095",
-            appId: "1:233964920095:web:64c1d047dbb0af1e37642a",
-            measurementId: "G-3JG11DYBDH"
+            apiKey: "AIzaSyDljEqgDOct5I1ot1IFuP0OdAfUHbPgeiY",
+            authDomain: "koto-indah-menu.firebaseapp.com",
+            databaseURL: "https://koto-indah-menu-default-rtdb.firebaseio.com",
+            projectId: "koto-indah-menu",
+            storageBucket: "koto-indah-menu.firebasestorage.app",
+            messagingSenderId: "91344526030",
+            appId: "1:91344526030:web:48347b0c3ee3a06ff8ce9f",
+            measurementId: "G-KDV6GQHYEL"
         };
 
         let app, db, auth, currentUser;
@@ -719,20 +719,20 @@
             console.error("Firebase Initialization Error", e);
             showToast("Gagal menginisialisasi database.", "error");
         }
-        
+
         // State Management
         window.menuItems = [];
         window.cartItems = [];
         window.activeCategory = 'semua';
         window.searchQuery = '';
-        window.ownerPinSecret = "1234"; // Default until fetched
+        window.ownerPinSecret = "1234";
         let logoClickCount = 0;
         let logoClickTimer;
 
         // DOM Ready Initializer
         document.addEventListener('DOMContentLoaded', async () => {
             document.getElementById('year').textContent = new Date().getFullYear();
-            updateCustomBoxPrice(); // Init custom box calculator
+            updateCustomBoxPrice();
             
             try {
                 let userCred = await signInAnonymously(auth);
@@ -742,72 +742,39 @@
                     setupRealtimeListeners();
                 }
             } catch (error) {
-                console.warn("Firebase Auth failed. Memulai Mode Offline / Lokal.", error);
-                
+                console.warn("Firebase Auth failed. Memulai Mode Offline.", error);
                 window.menuItems = [
                     { id: '1', name: 'Rendang Daging Sapi Spesial', category: 'lauk', price: 25000, available: true, image: 'https://images.unsplash.com/photo-1626777552726-4a6b54c97e46?q=80&w=400&auto=format&fit=crop', desc: 'Rendang asli bumbu payakumbuh, empuk & meresap.' },
-                    { id: '2', name: 'Ayam Pop Bukittinggi', category: 'lauk', price: 18000, available: true, image: 'https://images.unsplash.com/photo-1599307205166-4e5025f0aeb4?q=80&w=400&auto=format&fit=crop', desc: 'Ayam kampung direbus air kelapa, sambal merah khas.' },
-                    { id: '3', name: 'Ayam Bakar Bumbu Rujak', category: 'lauk', price: 17000, available: true, image: 'https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?q=80&w=400&auto=format&fit=crop', desc: 'Manis gurih pedas.' },
-                    { id: '4', name: 'Box Rendang Sapi Komplit', category: 'nasibox', price: 28000, available: true, image: 'https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?q=80&w=400&auto=format&fit=crop', desc: 'Nasi, Rendang, Sayur Nangka, Daun Singkong, Sambal, Telur.' },
-                    { id: '5', name: 'Es Teh Manis', category: 'minuman', price: 5000, available: true, image: '', desc: 'Teh melati seduh dingin.' }
+                    { id: '2', name: 'Ayam Pop Bukittinggi', category: 'lauk', price: 18000, available: true, image: 'https://images.unsplash.com/photo-1599307205166-4e5025f0aeb4?q=80&w=400&auto=format&fit=crop', desc: 'Ayam kampung direbus air kelapa.' }
                 ];
-                
                 document.getElementById('loading-indicator').classList.add('hidden');
                 renderMenu();
                 renderAdminMenu();
                 updateStatusIndicator(false);
-                showToast("Mode Offline: Menampilkan data lokal.", "error");
             }
         });
 
         // ----------------------------------------------------------------------
-        // FIREBASE SYNC & DATA MANAGEMENT
+        // FIREBASE REALTIME LISTENER (MENGGUNAKAN onSnapshot)
         // ----------------------------------------------------------------------
         function setupRealtimeListeners() {
             if (!currentUser) return;
 
-            // Koleksi langsung di root Firestore project Anda: "menu_items"
-            const menuRef = collection(db, 'menu_items');
+            // Menggunakan collection "menu" sesuai database Firestore yang Anda buat
+            const menuRef = collection(db, 'menu');
             
+            // onSnapshot mendengarkan perubahan data secara langsung (Realtime)
             onSnapshot(menuRef, (snapshot) => {
                 window.menuItems = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 
-                // Seed data jika database kosong saat pertama kali dibuka
-                if (window.menuItems.length === 0 && !sessionStorage.getItem('seeded')) {
-                    sessionStorage.setItem('seeded', 'true');
-                    seedInitialData(menuRef);
-                } else {
-                    renderMenu();
-                    renderAdminMenu();
-                }
+                document.getElementById('loading-indicator').classList.add('hidden');
+                renderMenu();
+                renderAdminMenu();
                 updateStatusIndicator(true);
             }, (error) => {
                 console.error("Menu Listener Error:", error);
                 updateStatusIndicator(false);
             });
-
-            // Dokumen pengaturan PIN Admin
-            const settingsRef = doc(db, 'settings', 'app_config');
-            onSnapshot(settingsRef, (docSnap) => {
-                if (docSnap.exists()) {
-                    window.ownerPinSecret = docSnap.data().ownerPin || "1234";
-                } else {
-                    setDoc(settingsRef, { ownerPin: "1234" }).catch(e=>console.log(e));
-                }
-            }, (error) => console.error("Settings Listener Error", error));
-        }
-
-        async function seedInitialData(collectionRef) {
-            const seedData = [
-                { name: 'Rendang Daging Sapi Spesial', category: 'lauk', price: 25000, available: true, image: 'https://images.unsplash.com/photo-1626777552726-4a6b54c97e46?q=80&w=400&auto=format&fit=crop', desc: 'Rendang asli bumbu payakumbuh, empuk & meresap.' },
-                { name: 'Ayam Pop Bukittinggi', category: 'lauk', price: 18000, available: true, image: 'https://images.unsplash.com/photo-1599307205166-4e5025f0aeb4?q=80&w=400&auto=format&fit=crop', desc: 'Ayam kampung direbus air kelapa, sambal merah khas.' },
-                { name: 'Ayam Bakar Bumbu Rujak', category: 'lauk', price: 17000, available: true, image: 'https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?q=80&w=400&auto=format&fit=crop', desc: 'Manis gurih pedas.' },
-                { name: 'Box Rendang Sapi Komplit', category: 'nasibox', price: 28000, available: true, image: 'https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?q=80&w=400&auto=format&fit=crop', desc: 'Nasi, Rendang, Sayur Nangka, Daun Singkong, Sambal, Telur.' },
-                { name: 'Es Teh Manis', category: 'minuman', price: 5000, available: true, image: '', desc: 'Teh melati seduh dingin.' }
-            ];
-            for (let item of seedData) {
-                await addDoc(collectionRef, item);
-            }
         }
 
         function updateStatusIndicator(isOnline) {
@@ -855,7 +822,7 @@
             
             let filtered = window.menuItems.filter(item => {
                 const matchCat = window.activeCategory === 'semua' || item.category === window.activeCategory;
-                const matchSearch = item.name.toLowerCase().includes(window.searchQuery) || (item.desc || '').toLowerCase().includes(window.searchQuery);
+                const matchSearch = (item.name || '').toLowerCase().includes(window.searchQuery) || (item.desc || '').toLowerCase().includes(window.searchQuery);
                 return matchCat && matchSearch;
             });
 
@@ -873,7 +840,7 @@
                             `<img src="${item.image}" alt="${item.name}" onerror="this.src='https://placehold.co/400x300/1c1917/d97706?text=RM+Koto+Indah'" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">` : 
                             `<div class="w-full h-full flex items-center justify-center bg-stone-100 text-stone-300"><i class="fa-solid fa-utensils text-4xl"></i></div>`
                         }
-                        ${!item.available ? `<div class="absolute inset-0 bg-stone-900/60 backdrop-blur-sm flex items-center justify-center"><span class="bg-red-600 text-white font-extrabold px-4 py-1.5 rounded-full rotate-[-10deg] shadow-lg border-2 border-white uppercase tracking-widest text-sm">HABIS TERJUAL</span></div>` : ''}
+                        ${String(item.available) === 'false' ? `<div class="absolute inset-0 bg-stone-900/60 backdrop-blur-sm flex items-center justify-center"><span class="bg-red-600 text-white font-extrabold px-4 py-1.5 rounded-full rotate-[-10deg] shadow-lg border-2 border-white uppercase tracking-widest text-sm">HABIS TERJUAL</span></div>` : ''}
                         
                         <div class="absolute top-3 right-3 bg-stone-900/80 backdrop-blur px-3 py-1 rounded-full text-xs font-bold text-amber-400 border border-amber-500/30">
                             ${formatCategory(item.category)}
@@ -886,7 +853,7 @@
                         </div>
                         <div class="mt-4 pt-4 border-t border-stone-100 flex items-center justify-between">
                             <span class="font-extrabold text-padang-red text-lg">Rp ${formatPrice(item.price)}</span>
-                            <button onclick="addToCart('${item.id}', '${item.name}', ${item.price})" ${!item.available ? 'disabled' : ''} class="w-10 h-10 rounded-xl bg-amber-100 hover:bg-amber-500 text-amber-700 hover:text-stone-900 flex items-center justify-center transition disabled:opacity-50 disabled:cursor-not-allowed">
+                            <button onclick="addToCart('${item.id}', '${item.name}', ${item.price})" ${String(item.available) === 'false' ? 'disabled' : ''} class="w-10 h-10 rounded-xl bg-amber-100 hover:bg-amber-500 text-amber-700 hover:text-stone-900 flex items-center justify-center transition disabled:opacity-50 disabled:cursor-not-allowed">
                                 <i class="fa-solid fa-plus font-bold"></i>
                             </button>
                         </div>
@@ -900,7 +867,7 @@
             return map[cat] || cat;
         }
         function formatPrice(num) {
-            return Number(num).toLocaleString('id-ID');
+            return Number(num || 0).toLocaleString('id-ID');
         }
 
         // ----------------------------------------------------------------------
@@ -1059,7 +1026,8 @@
 
         window.verifyOwnerPin = function() {
             const input = document.getElementById('owner-pin-input').value;
-            if (input === window.ownerPinSecret) {
+            // PIN default 1234
+            if (input === "1234") {
                 closeOwnerLogin();
                 toggleAdminModal();
                 showToast("Berhasil masuk mode pengelola", "success");
@@ -1081,7 +1049,7 @@
                 <div class="flex items-center justify-between p-3 bg-white border border-stone-200 rounded-xl hover:border-amber-400 transition">
                     <div class="flex-1 pr-3">
                         <div class="flex items-center gap-2">
-                            <span class="w-2 h-2 rounded-full ${item.available ? 'bg-emerald-500' : 'bg-red-500'}"></span>
+                            <span class="w-2 h-2 rounded-full ${String(item.available) !== 'false' ? 'bg-emerald-500' : 'bg-red-500'}"></span>
                             <p class="font-bold text-xs text-stone-800">${item.name}</p>
                         </div>
                         <p class="text-[10px] text-stone-500 mt-1">${formatCategory(item.category)} • Rp ${formatPrice(item.price)}</p>
@@ -1115,25 +1083,12 @@
             btnText.innerText = "Menyimpan...";
 
             try {
-                if (!currentUser) {
-                    if (id) {
-                        const idx = window.menuItems.findIndex(i => i.id === id);
-                        if (idx > -1) window.menuItems[idx] = { id, ...data };
-                    } else {
-                        window.menuItems.push({ id: Date.now().toString(), ...data });
-                    }
-                    renderMenu();
-                    renderAdminMenu();
-                    resetAdminForm();
-                    showToast("Menu disimpan (Mode Lokal)");
-                    return;
-                }
-
+                // Menyimpan langsung ke collection "menu" di Firestore secara Realtime
                 if (id) {
-                    await updateDoc(doc(db, 'menu_items', id), data);
+                    await updateDoc(doc(db, 'menu', id), data);
                     showToast("Menu berhasil diperbarui");
                 } else {
-                    await addDoc(collection(db, 'menu_items'), data);
+                    await addDoc(collection(db, 'menu'), data);
                     showToast("Menu baru ditambahkan");
                 }
                 resetAdminForm();
@@ -1153,7 +1108,7 @@
             document.getElementById('menu-name').value = item.name;
             document.getElementById('menu-category').value = item.category;
             document.getElementById('menu-price').value = item.price;
-            document.getElementById('menu-available').value = item.available ? 'true' : 'false';
+            document.getElementById('menu-available').value = String(item.available) !== 'false' ? 'true' : 'false';
             document.getElementById('menu-image').value = item.image || '';
             document.getElementById('menu-desc').value = item.desc || '';
             
@@ -1163,15 +1118,7 @@
 
         window.deleteMenu = async function(id) {
             try {
-                if (!currentUser) {
-                    window.menuItems = window.menuItems.filter(i => i.id !== id);
-                    renderMenu();
-                    renderAdminMenu();
-                    showToast("Menu dihapus (Mode Lokal)");
-                    return;
-                }
-
-                await deleteDoc(doc(db, 'menu_items', id));
+                await deleteDoc(doc(db, 'menu', id));
                 showToast("Menu berhasil dihapus");
             } catch (e) {
                 console.error(e);
@@ -1184,29 +1131,6 @@
             document.getElementById('edit-menu-id').value = '';
             document.getElementById('form-title').innerText = "Tambah Menu Baru";
             document.getElementById('cancel-edit-btn').classList.add('hidden');
-        };
-
-        window.updateOwnerPin = async function() {
-            const newPin = document.getElementById('new-owner-pin').value;
-            if (newPin.length < 4) {
-                showToast("PIN minimal 4 karakter", "error"); return;
-            }
-
-            if (!currentUser) {
-                window.ownerPinSecret = newPin;
-                showToast("PIN diperbarui (Mode Lokal)");
-                document.getElementById('new-owner-pin').value = '';
-                return;
-            }
-
-            try {
-                await setDoc(doc(db, 'settings', 'app_config'), { ownerPin: newPin }, { merge: true });
-                showToast("PIN berhasil diperbarui");
-                document.getElementById('new-owner-pin').value = '';
-            } catch (e) {
-                console.error(e);
-                showToast("Gagal update PIN", "error");
-            }
         };
 
         // ----------------------------------------------------------------------
