@@ -443,7 +443,7 @@
                             </div>
                             <div>
                                 <h4 class="font-bold text-stone-200">Alamat Resto</h4>
-                                <p class="text-stone-400 text-sm">Rumah Makan Koto Indah Masakan Padang (Klik tombol petunjuk arah di bawah)</p>
+                                <p class="text-stone-400 text-sm">Rumah Makan Koto Indah Masakan Padang</p>
                             </div>
                         </div>
 
@@ -694,18 +694,18 @@
     <script type="module">
         // Firebase Modular SDK Imports
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, getDoc, setDoc, deleteDoc, onSnapshot, collection, addDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
+        // Menggunakan Firebase Config Milik Anda
         const firebaseConfig = {
-            apiKey: "AIzaSyDljEqgDOct5I1ot1IFuP0OdAfUHbPgeiY",
-            authDomain: "koto-indah-menu.firebaseapp.com",
-            databaseURL: "https://koto-indah-menu-default-rtdb.firebaseio.com",
-            projectId: "koto-indah-menu",
-            storageBucket: "koto-indah-menu.firebasestorage.app",
-            messagingSenderId: "91344526030",
-            appId: "1:91344526030:web:48347b0c3ee3a06ff8ce9f",
-            measurementId: "G-KDV6GQHYEL"
+            apiKey: "AIzaSyD7sjq_qs7ibKDmevJWxO6N8qNXNbZH_qE",
+            authDomain: "gilangranggaid.firebaseapp.com",
+            projectId: "gilangranggaid",
+            storageBucket: "gilangranggaid.firebasestorage.app",
+            messagingSenderId: "233964920095",
+            appId: "1:233964920095:web:64c1d047dbb0af1e37642a",
+            measurementId: "G-3JG11DYBDH"
         };
 
         let app, db, auth, currentUser;
@@ -719,9 +719,6 @@
             console.error("Firebase Initialization Error", e);
             showToast("Gagal menginisialisasi database.", "error");
         }
-
-        // Environment ID
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'koto-indah-app-default';
         
         // State Management
         window.menuItems = [];
@@ -738,8 +735,6 @@
             updateCustomBoxPrice(); // Init custom box calculator
             
             try {
-                // Rule: Auth Before Queries
-                // Using Anonymous Auth. Custom token removed to avoid configuration conflicts with dummy project.
                 let userCred = await signInAnonymously(auth);
                 currentUser = userCred.user;
                 
@@ -747,9 +742,8 @@
                     setupRealtimeListeners();
                 }
             } catch (error) {
-                console.warn("Firebase Auth failed (configuration-not-found). Memulai Mode Offline / Lokal.", error);
+                console.warn("Firebase Auth failed. Memulai Mode Offline / Lokal.", error);
                 
-                // Fallback to local memory state so the app works without Firebase
                 window.menuItems = [
                     { id: '1', name: 'Rendang Daging Sapi Spesial', category: 'lauk', price: 25000, available: true, image: 'https://images.unsplash.com/photo-1626777552726-4a6b54c97e46?q=80&w=400&auto=format&fit=crop', desc: 'Rendang asli bumbu payakumbuh, empuk & meresap.' },
                     { id: '2', name: 'Ayam Pop Bukittinggi', category: 'lauk', price: 18000, available: true, image: 'https://images.unsplash.com/photo-1599307205166-4e5025f0aeb4?q=80&w=400&auto=format&fit=crop', desc: 'Ayam kampung direbus air kelapa, sambal merah khas.' },
@@ -772,13 +766,13 @@
         function setupRealtimeListeners() {
             if (!currentUser) return;
 
-            // Paths adhering strictly to Rule 1: /artifacts/{appId}/public/data/{collectionName}
-            const menuRef = collection(db, 'artifacts', appId, 'public', 'data', 'menu_items');
+            // Koleksi langsung di root Firestore project Anda: "menu_items"
+            const menuRef = collection(db, 'menu_items');
             
             onSnapshot(menuRef, (snapshot) => {
                 window.menuItems = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 
-                // Seed data if completely empty (First Time Setup)
+                // Seed data jika database kosong saat pertama kali dibuka
                 if (window.menuItems.length === 0 && !sessionStorage.getItem('seeded')) {
                     sessionStorage.setItem('seeded', 'true');
                     seedInitialData(menuRef);
@@ -792,12 +786,12 @@
                 updateStatusIndicator(false);
             });
 
-            const settingsRef = doc(db, 'artifacts', appId, 'public', 'data', 'settings', 'app_config');
+            // Dokumen pengaturan PIN Admin
+            const settingsRef = doc(db, 'settings', 'app_config');
             onSnapshot(settingsRef, (docSnap) => {
                 if (docSnap.exists()) {
                     window.ownerPinSecret = docSnap.data().ownerPin || "1234";
                 } else {
-                    // Initialize setting doc
                     setDoc(settingsRef, { ownerPin: "1234" }).catch(e=>console.log(e));
                 }
             }, (error) => console.error("Settings Listener Error", error));
@@ -1005,8 +999,7 @@
             msg += `-----------------------------------%0A`;
             msg += `*TOTAL PEMBAYARAN:* Rp ${formatPrice(total)}%0A`;
             
-            // Format for wa.me API
-            const phone = "62881011723786"; // Based on HTML footer
+            const phone = "62881011723786";
             window.open(`https://wa.me/${phone}?text=${msg}`, '_blank');
         }
 
@@ -1022,7 +1015,6 @@
             const side = document.getElementById('custom-side-dish').value.split('|');
             const qty = parseInt(document.getElementById('custom-box-qty').value) || 1;
             
-            // Base nasi box price (Nasi, Sambal, Sayur standard) = Rp 10.000
             let unitPrice = 10000 + parseInt(main[1]) + parseInt(side[1]);
             let total = unitPrice * qty;
             
@@ -1035,7 +1027,6 @@
             const side = document.getElementById('custom-side-dish').value.split('|')[0];
             const qty = parseInt(document.getElementById('custom-box-qty').value) || 1;
             
-            // Base 10k
             let unitPrice = 10000 + parseInt(document.getElementById('custom-main-dish').value.split('|')[1]) + parseInt(document.getElementById('custom-side-dish').value.split('|')[1]);
             let name = `Custom Nasi Box (${main} + ${side === 'Tanpa Lauk Tambahan' ? 'Standar' : side})`;
             
@@ -1124,7 +1115,6 @@
             btnText.innerText = "Menyimpan...";
 
             try {
-                // If Firebase auth failed, handle save in Local Mode memory
                 if (!currentUser) {
                     if (id) {
                         const idx = window.menuItems.findIndex(i => i.id === id);
@@ -1139,12 +1129,11 @@
                     return;
                 }
 
-                // Firebase logic
                 if (id) {
-                    await updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'menu_items', id), data);
+                    await updateDoc(doc(db, 'menu_items', id), data);
                     showToast("Menu berhasil diperbarui");
                 } else {
-                    await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'menu_items'), data);
+                    await addDoc(collection(db, 'menu_items'), data);
                     showToast("Menu baru ditambahkan");
                 }
                 resetAdminForm();
@@ -1174,7 +1163,6 @@
 
         window.deleteMenu = async function(id) {
             try {
-                // Handle delete in Local Mode memory if Firebase auth failed
                 if (!currentUser) {
                     window.menuItems = window.menuItems.filter(i => i.id !== id);
                     renderMenu();
@@ -1183,8 +1171,7 @@
                     return;
                 }
 
-                // Firebase logic
-                await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'menu_items', id));
+                await deleteDoc(doc(db, 'menu_items', id));
                 showToast("Menu berhasil dihapus");
             } catch (e) {
                 console.error(e);
@@ -1205,7 +1192,6 @@
                 showToast("PIN minimal 4 karakter", "error"); return;
             }
 
-            // Handle PIN update in Local Mode memory
             if (!currentUser) {
                 window.ownerPinSecret = newPin;
                 showToast("PIN diperbarui (Mode Lokal)");
@@ -1214,7 +1200,7 @@
             }
 
             try {
-                await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'settings', 'app_config'), { ownerPin: newPin }, { merge: true });
+                await setDoc(doc(db, 'settings', 'app_config'), { ownerPin: newPin }, { merge: true });
                 showToast("PIN berhasil diperbarui");
                 document.getElementById('new-owner-pin').value = '';
             } catch (e) {
@@ -1243,7 +1229,6 @@
                 setTimeout(() => toast.remove(), 300);
             }, 3000);
         }
-
     </script>
 </body>
 </html>
